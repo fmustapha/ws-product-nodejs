@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EQWorks/ws-product-nodejs.git"
+    "url": "git+https://github.com/fmustapha/ws-product-nodejs.git"
   },
-  "author": "woozyking",
+  "author": "Faith Yusuf",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/EQWorks/ws-product-nodejs/issues"
+    "url": "https://github.com/fmustapha/ws-product-nodejs.git"
   },
-  "homepage": "https://github.com/EQWorks/ws-product-nodejs#readme",
+  "homepage": "https://github.com/fmustapha/ws-product-nodejs#readme",
   "dependencies": {
     "express": "^4.15.3",
     "pg": "^6.2.4"
