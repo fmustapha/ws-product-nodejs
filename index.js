@@ -15,6 +15,14 @@ const pool = new pg.Pool({
   port: process.env.PGPORT
 });
 
+const limiter = (req, res, next) => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(next());
+    }, 2000);
+  })
+};
+
 const queryHandler = (req, res, next) => {
   pool
     .query(req.sqlQuery)
@@ -24,12 +32,13 @@ const queryHandler = (req, res, next) => {
     .catch(next);
 };
 
-app.get("/", (req, res) => {
+app.get("/", limiter, (req, res) => {
   res.send("Welcome to EQ Works 😎");
 });
 
 app.get(
   "/events/hourly",
+  limiter,
   (req, res, next) => {
     req.sqlQuery = `
     SELECT date, hour, events
@@ -44,6 +53,7 @@ app.get(
 
 app.get(
   "/events/daily",
+  limiter,
   (req, res, next) => {
     req.sqlQuery = `
     SELECT date, SUM(events) AS events
@@ -59,6 +69,7 @@ app.get(
 
 app.get(
   "/stats/hourly",
+  limiter,
   (req, res, next) => {
     req.sqlQuery = `
     SELECT date, hour, impressions, clicks, revenue
@@ -73,6 +84,7 @@ app.get(
 
 app.get(
   "/stats/daily",
+  limiter,
   (req, res, next) => {
     req.sqlQuery = `
     SELECT date,
@@ -91,6 +103,7 @@ app.get(
 
 app.get(
   "/poi",
+  limiter,
   (req, res, next) => {
     req.sqlQuery = `
     SELECT *
