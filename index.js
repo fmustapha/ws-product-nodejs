@@ -15,16 +15,28 @@ const pool = new pg.Pool({
   port: process.env.PGPORT
 });
 
-//Rate limiting function
+//Rate-limiting middleware
 const limiter = (req, res, next) => {
-  const interval = process.env.INTERVAL;
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(next());
-    }, interval);
-  });
+  let limit = 2000; //bytes
+  const packet = req && req.socket.bytesRead;
+  if (limit >= packet) {
+    const interval = process.env.INTERVAL;
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(next());
+      }, interval);
+    });
+  } else {
+    limit = 2000;
+    res && res
+      .status(503)
+      .send({ message: "Too many requests, try again in a minute" });
+    limiter();
+  }
+  limit -= packet;
 };
 
+// Query handler middleware
 const queryHandler = (req, res, next) => {
   pool
     .query(req.sqlQuery)
@@ -92,7 +104,7 @@ app.get(
     SELECT date,
         SUM(impressions) AS impressions,
         SUM(clicks) AS clicks,
-        SUM(revenue) AS revenue
+        ROUND(SUM(revenue), 2) AS revenue
     FROM public.hourly_stats
     GROUP BY date
     ORDER BY date
@@ -121,14 +133,19 @@ app.get(
   limiter,
   (req, res, next) => {
     req.sqlQuery = `
-    SELECT *
+    SELECT poi.name, poi.lat, poi.lon, phs.date,
+    SUM(phe.events) AS events,
+    SUM(phs.impressions) AS impressions,
+    SUM(phs.clicks) AS clicks,
+    ROUND(SUM(phs.revenue), 2) AS revenue
     FROM public.poi poi 
 INNER JOIN public.hourly_stats phs 
  ON poi.poi_id = phs.poi_id 
  INNER JOIN public.hourly_events phe
  ON poi.poi_id = phe.poi_id
- ORDER BY phe.date
- LIMIT 200 
+ GROUP BY poi.name, poi.lat, poi.lon, phs.date
+ ORDER BY phs.date
+ LIMIT 20 
   `;
     return next();
   },
