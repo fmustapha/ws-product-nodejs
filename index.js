@@ -15,12 +15,14 @@ const pool = new pg.Pool({
   port: process.env.PGPORT
 });
 
+//Rate limiting function
 const limiter = (req, res, next) => {
+  const interval = process.env.INTERVAL;
   return new Promise(resolve => {
     setTimeout(() => {
       resolve(next());
-    }, 2000);
-  })
+    }, interval);
+  });
 };
 
 const queryHandler = (req, res, next) => {
@@ -108,6 +110,25 @@ app.get(
     req.sqlQuery = `
     SELECT *
     FROM public.poi;
+  `;
+    return next();
+  },
+  queryHandler
+);
+
+app.get(
+  "/poi/details",
+  limiter,
+  (req, res, next) => {
+    req.sqlQuery = `
+    SELECT *
+    FROM public.poi poi 
+INNER JOIN public.hourly_stats phs 
+ ON poi.poi_id = phs.poi_id 
+ INNER JOIN public.hourly_events phe
+ ON poi.poi_id = phe.poi_id
+ ORDER BY phe.date
+ LIMIT 200 
   `;
     return next();
   },
