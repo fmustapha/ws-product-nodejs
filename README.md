@@ -1,32 +1,42 @@
-Work Sample for Product Aspect, Node.js Variant
----
+# WS-Product-Nodejs
 
-[What is this for?](https://github.com/EQWorks/work-samples#what-is-this)
+WS-Product-Nodejs includes a RESTful API for users to view Intersting places (POIs) in North America and their visit statistics.
 
-### Setup and Run
+## API on Heroku
 
-The following are the recommended options, but you're free to use any means to get started.
+[View](https://eq-back.herokuapp.com/)
 
-#### Remote Option: Glitch.com
+## Development
 
-1. [![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/import/github/EQWorks/ws-product-nodejs)
-2. Populate `.env` file with the environment variables given in the problem set we send to you through email
-3. Click on `Show Live` and you should see `Welcome to EQ Works 😎`
+This application was developed using the following frameworks.
 
-#### Local Option 1: Node.js 6.10+
+- [NodeJs](https://nodejs.org)
+- [express](https://expressjs.com/)
+- [Postgres](https://www.postgresql.org/docs/9.6/static/libpq-envars.html)
 
-1. Clone this repository
-2. Install Node.js dependencies `$ npm install`
-3. Set environment variables given in the problem set we send to you through email and run `$ npm run dev`
-4. Open your browser and point to `localhost:5555` and you should see `Welcome to EQ Works 😎`
+## Application Features
 
-#### Local Option 2: Docker (`docker-compose` needed)
+#### Displays stats of POIs
 
-1. Clone this repository
-2. Create and populate `.env` file with the environment variables given in the problem set we send to you through email
-3. `$ docker-compose up` (or `$ docker-compose up -d` to run as a daemon)
-4. Open your browser and point to `localhost:5555` and you should see `Welcome to EQ Works 😎`
+Users can view POI details and the events/stats per day and hour.
 
-### Notes on working through the problems
+#### Rate-Limiting
 
-Make sure any additional Node.js level dependencies are properly added in `package.json`. We encourage a healthy mixture of your own implementations, and good choices of existing open-source libraries/tools. We will comment in the problems to indicate which ones cannot be solved purely through an off-the-shelf solution.
+- It implements the Leaky Bucket algorithm to limit/prevent attacks
+
+## Setup and Installation
+
+- Ensure that you have NodeJs installed on your machine. This server uses Node (v6.10.3)
+- Clone the repository `$ https://github.com/fmustapha/ws-product-nodejs.git`
+- Change into the directory `$ cd ws-product-nodejs`
+- Install all required dependencies with `$ npm install` or `$ yarn install`
+- Create a `.env` file in your root directory as described in `.env.sample` file
+
+## Available Scripts and Usage
+
+- Run `npm run dev` to start the application.<br />
+  Open [http://localhost:5555](http://localhost:5555) to view it in the browser.
+
+### `npm test`
+
+Launches the test runner.
