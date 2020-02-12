@@ -1,8 +1,7 @@
 const express = require("express");
-const path = require('path');
+const path = require("path");
 const pg = require("pg");
 const dotenv = require("dotenv");
-
 
 dotenv.config();
 
@@ -27,13 +26,14 @@ const limiter = (req, res, next) => {
       setTimeout(() => {
         resolve(next());
       }, interval);
-    }).then()
+    }).then();
   } else {
     limit = 2000;
-    res && res
-      .status(503)
-      .send({ message: "Too many requests, try again in a minute" })
-      .end()
+    res &&
+      res
+        .status(503)
+        .send({ message: "Too many requests, try again in a minute" })
+        .end();
     limiter();
   }
   limit -= packet;
@@ -48,15 +48,7 @@ const queryHandler = (req, res, next) => {
     })
     .catch(next);
 };
-app.use(express.static(path.join(__dirname, 'build')));
-
-app.get('/', function(req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
-app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+app.use(express.static(path.join(__dirname, "build")));
 
 app.get("/", limiter, (req, res) => {
   res.send("Welcome to EQ Works 😎");
