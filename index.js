@@ -26,7 +26,7 @@ const limiter = (req, res, next) => {
       setTimeout(() => {
         resolve(next());
       }, interval);
-    }).then();
+    })
   } else {
     limit = 2000;
     res &&
