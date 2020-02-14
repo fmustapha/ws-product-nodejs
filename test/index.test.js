@@ -23,6 +23,7 @@ describe("Server", () => {
       .get("/events/hourly")
       .end((err, res) => {
         expect(res).to.have.status(200);
+        expect(res.body).to.be.an('array')
         done();
       });
   });
@@ -33,6 +34,7 @@ describe("Server", () => {
       .get("/events/daily")
       .end((err, res) => {
         expect(res).to.have.status(200);
+        expect(res.body).to.be.an('array')
         done();
       });
   });
@@ -43,6 +45,7 @@ describe("Server", () => {
       .get("/events/daily")
       .end((err, res) => {
         expect(res).to.have.status(200);
+        expect(res.body).to.be.an('array').that.has.lengthOf(7);
         done();
       });
   });
@@ -53,6 +56,7 @@ describe("Server", () => {
       .get("/stats/hourly")
       .end((err, res) => {
         expect(res).to.have.status(200);
+        expect(res.body).to.be.an('array');
         done();
       });
   });
@@ -63,6 +67,7 @@ describe("Server", () => {
       .get("/stats/daily")
       .end((err, res) => {
         expect(res).to.have.status(200);
+        expect(res.body).to.be.an('array').that.has.lengthOf(7);
         done();
       });
   });
@@ -73,6 +78,18 @@ describe("Server", () => {
       .get("/poi")
       .end((err, res) => {
         expect(res).to.have.status(200);
+        expect(res.body).to.be.an('array').that.has.lengthOf(4)
+        done();
+      });
+  });
+  
+  it("gets poi details", done => {
+    chai
+      .request(app)
+      .get("/poi/details")
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an('array').that.has.lengthOf(20)
         done();
       });
   });
