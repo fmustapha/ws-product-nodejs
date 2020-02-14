@@ -19,22 +19,20 @@ const pool = new pg.Pool({
 //Rate-limiting middleware
 const limiter = (req, res, next) => {
   let limit = 2000; //bytes
-  const packet = req && req.socket.bytesRead;
+  const packet = req.socket.bytesRead;
   if (limit >= packet) {
     const interval = process.env.INTERVAL;
     return new Promise(resolve => {
       setTimeout(() => {
-        resolve(next());
+        resolve();
+        next();
       }, interval);
     })
   } else {
     limit = 2000;
-    res &&
       res
         .status(503)
-        .send({ message: "Too many requests, try again in a minute" })
-        .end();
-    limiter();
+        .send({ message: "Too many requests, try again soon" })
   }
   limit -= packet;
 };
